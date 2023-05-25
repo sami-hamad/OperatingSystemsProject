@@ -1,20 +1,97 @@
-// OS_Project.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include <fstream>
+using namespace std;
 
-int main()
-{
-    std::cout << "Hello World!\n";
+int PROCESS, RESOURCE;
+
+void calculateNeed(int **need, int **max, int **allocation) {
+  for (int i = 0; i < PROCESS; ++i) {
+    for (int j = 0; j < RESOURCE; ++j) {
+      need[i][j] = max[i][j] - allocation[i][j];
+    }
+  }
+
+  // cout<<"\nNEED MATRIX:\n";
+  // for (int i = 0; i < PROCESS; ++i) {
+  //   cout<<"Process "<<i+1<<": ";
+  //   for (int j = 0; j < RESOURCE; ++j) {
+  //     cout << need[i][j]<<"\t";
+  //   }
+  //   cout<<"\n";
+  // }
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+int main() {
+  cout << "\n\nWelcome, this is an implementation of Banker’s algorithm to "
+          "avoid deadlocks!\n\n";
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+  ofstream fout("output.txt");
+  ifstream fin("input.txt");
+
+
+  do {
+    cout << "Enter the number of processes: ";
+    cin >> PROCESS;
+    if (PROCESS < 1)
+      cout << "Please enter a valid number of processes (>0)\n";
+  } while (PROCESS < 1);
+
+  do {
+    cout << "Enter the number of resources: ";
+    cin >> RESOURCE;
+    if (RESOURCE < 1)
+      cout << "Please enter a valid number of resources (>1)\n";
+  } while (RESOURCE < 1);
+
+  int **allocation = new int *[PROCESS];
+  int **max = new int *[PROCESS];
+  int *available = new int[RESOURCE];
+  int **need = new int *[PROCESS];
+
+  for (int i = 0; i < PROCESS; ++i) {
+    allocation[i] = new int[RESOURCE];
+    max[i] = new int[RESOURCE];
+    need[i] = new int[RESOURCE];
+  }
+
+  cout << "\nEnter the currently allocated resources to each process:\n\n";
+  for (int i = 0; i < PROCESS; ++i) {
+    cout << "Process " << i + 1 << ":\n";
+    for (int j = 0; j < RESOURCE; ++j) {
+      cout << "\t\t\tResource " << (char)(j + 65) << ": ";
+      cin >> allocation[i][j];
+    }
+  }
+
+  cout << "\nEnter the maximum number of resources for each process:\n";
+  for (int i = 0; i < PROCESS; ++i) {
+    cout << "Process " << i + 1 << ":\n";
+    for (int j = 0; j < RESOURCE; ++j) {
+      cout << "\t\t\tResource " << (char)(j + 65) << ": ";
+      cin >> max[i][j];
+    }
+  }
+
+  cout << "Enter the number of available instances of each resource:\n";
+  for (int i = 0; i < RESOURCE; ++i) {
+    cout << "Resource " << (char)(i + 65) << ": ";
+    cin >> available[i];
+  }
+
+  calculateNeed(need, max, allocation);
+
+
+
+  // Clean up dynamic memory
+  for (int i = 0; i < PROCESS; ++i) {
+    delete[] allocation[i];
+    delete[] max[i];
+    delete[] need[i];
+  }
+  delete[] allocation;
+  delete[] max;
+  delete[] available;
+  delete[] need;
+
+  return 0;
+}
