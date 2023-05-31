@@ -1,9 +1,10 @@
+//Sami Mohammed Hamad - 20200880
 #include <iostream>
 #include <fstream>
 using namespace std;
 
 //ofstream fout("output.txt");
-//ifstream fin("input.txt");
+ifstream fin("input.txt");
 
 void fillMatrices(int* available, int** max, int** allocation);
 void calculateNeed(int** need, int** max, int** allocation);
@@ -19,14 +20,14 @@ int main() {
     
     do {
         cout << "Enter the number of processes: ";
-        cin >> PROCESS;
+        fin >> PROCESS;
         if (PROCESS < 1)
           cout << "Please enter a valid number of processes (>0)\n";
     } while (PROCESS < 1);
     
     do {
         cout << "Enter the number of resources: ";
-        cin >> RESOURCE;
+        fin >> RESOURCE;
         if (RESOURCE < 1)
           cout << "Please enter a valid number of resources (>1)\n";
     } while (RESOURCE < 1);
@@ -99,7 +100,7 @@ void fillMatrices(int* available, int** max, int** allocation) {
         cout << "Process " << i + 1 << ":\n";
         for (int j = 0; j < RESOURCE; ++j) {
             cout << "\t\t\tResource " << (char)(j + 65) << ": ";
-            cin >> allocation[i][j];
+            fin >> allocation[i][j];
         }
     }
 
@@ -108,14 +109,14 @@ void fillMatrices(int* available, int** max, int** allocation) {
         cout << "Process " << i + 1 << ":\n";
         for (int j = 0; j < RESOURCE; ++j) {
             cout << "\t\t\tResource " << (char)(j + 65) << ": ";
-            cin >> max[i][j];
+            fin >> max[i][j];
         }
     }
 
     cout << "Enter the number of available instances of each resource:\n";
     for (int i = 0; i < RESOURCE; ++i) {
         cout << "Resource " << (char)(i + 65) << ": ";
-        cin >> available[i];
+        fin >> available[i];
     }
 }
 void calculateNeed(int** need, int** max, int** allocation) {
